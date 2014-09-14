@@ -1,0 +1,69 @@
+//printerVoltageOutX/Y/Z +1 = +1° vice versa.  If pixelation is "p" 
+//and servo speed (360°) is "s"; 
+//and length from mirror/servo to print is "r"
+//(2πr/360)DPI = pixels per degree
+//1000/ppd = milliseconds per pixel
+#include <Servo.h>
+Servo servoX;
+Servo servoY;
+int dripReaderZ = 10;
+int laserVoltage = 9;
+void setup() {
+  Serial.begin(9600);
+  pinMode (laserVoltage, OUTPUT);
+  servoX.attach(13);
+  servoY.attach(12) ;
+  pinMode (dripReaderZ, INPUT);
+}
+void loop() {
+  int rad = 8;
+  int speed360 = 12;
+  int DPI = 650;
+  int ppd = ((6.28318530718 * rad)/360) * DPI;
+  
+  int pixStartX = 0; //pixels on xaxis (will change, ex. +5, -2, +3, -4 etc.)
+  int pixStartY = 0; //pixels on yaxis (will change, ex. +5, -2, +3, -4 etc.)
+  int pixStartZ = 0; //pixels on zaxis (will change based upon x and y; vice versa)
+  //for example, lets say servo speed is 72° per second
+  int pixTotalX = 0;
+  int pixTotalY = 0;
+  int pixTotalZ = 0;
+  int dripTotalZ = 0;
+  int maxVoltageValue = 1020;
+  //if 1 drip is equal to 0.5 pixels
+   
+  //Find new x,y values for z
+  //For 5x5x5 box 
+  int newValueForZ = Serial.read();
+  while(pixTotalZ = newValueForZ) {
+    
+    int dripReaderValue = analogRead(dripReaderZ);
+  if (dripReaderValue < 200) {
+   dripTotalZ += 1;
+   pixTotalZ += 0.5; 
+  }
+  
+  int newXValueForZ = Serial.read();
+  int newYValueForZ = Serial.read();
+  
+  while(pixTotalX <= newXValueForZ && pixTotalY <= newYValueForZ) {
+   if(pixTotalY == newYValueForZ && pixTotalX < newXValueForZ) {
+    pixTotalY -= 1;
+   }
+  if(pixTotalX == newXValueForZ && pixTotalY < newYValueForZ) {
+    pixTotalX -= 1;
+   }
+  if(pixTotalY == newYValueForZ && pixTotalX == newXValueForZ) {
+    analogWrite(laserVoltage, maxVoltageValue);
+   }
+   if(pixTotalY == newYValueForZ && pixTotalX == newXValueForZ) {
+    pixTotalX += 1;
+    pixTotalY += 1;
+   } 
+  }
+  }
+  
+  
+  
+  
+}
